@@ -57,12 +57,38 @@ export function KlageWizard() {
         if (parsed?.data) setData(parsed.data);
         if (parsed?.photos) setPhotos(parsed.photos);
         if (parsed?.stepIdx) setStepIdx(parsed.stepIdx);
+        if (parsed?.letter) setLetter(parsed.letter);
+        if (parsed?.paid) setPaid(true);
       }
     } catch {}
+
     const params = new URLSearchParams(window.location.search);
-    if (params.get("paid") === "1") {
-      setPaid(true);
-      toast.success("Betalt — klagen er låst opp.");
+    if (params.get("cancelled") === "1") {
+      toast.info("Betaling avbrutt. Klagen din er fortsatt her.");
+      window.history.replaceState({}, "", "/klage");
+    }
+
+    const sessionId = params.get("session_id");
+    if (sessionId) {
+      const verifyToast = toast.loading("Bekrefter betaling…");
+      fetch(`/api/verify-payment?session_id=${encodeURIComponent(sessionId)}`)
+        .then((r) => r.json())
+        .then((res) => {
+          toast.dismiss(verifyToast);
+          if (res.paid) {
+            setPaid(true);
+            toast.success("Betalt — klagen er låst opp.");
+          } else {
+            toast.error(`Betaling ikke fullført: ${res.status || res.error || "ukjent"}`);
+          }
+        })
+        .catch(() => {
+          toast.dismiss(verifyToast);
+          toast.error("Kunne ikke bekrefte betaling. Kontakt support hvis du har betalt.");
+        })
+        .finally(() => {
+          window.history.replaceState({}, "", "/klage");
+        });
     }
   }, []);
 
@@ -70,10 +96,10 @@ export function KlageWizard() {
     try {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ data, photos, stepIdx }),
+        JSON.stringify({ data, photos, stepIdx, letter, paid }),
       );
     } catch {}
-  }, [data, photos, stepIdx]);
+  }, [data, photos, stepIdx, letter, paid]);
 
   const set = <K extends keyof KlageInput>(key: K, value: KlageInput[K]) =>
     setData((d) => ({ ...d, [key]: value }));

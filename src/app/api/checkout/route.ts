@@ -27,8 +27,8 @@ export async function POST(req: Request) {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      payment_method_types: ["card"],
       customer_email: epost,
+      locale: "nb",
       line_items: [
         {
           price_data: {
@@ -44,8 +44,8 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${origin}/klage?paid=1&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/klage`,
+      success_url: `${origin}/klage?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/klage?cancelled=1`,
       metadata: {
         selskap: selskap ?? "",
         saksnummer: saksnummer ?? "",
