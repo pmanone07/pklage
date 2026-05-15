@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Camera, Check, FileText, Loader2, Sparkles, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Camera, Check, FileText, Loader2, Plus, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 import { Input, Textarea } from "./ui/input";
 import { Label, Hint } from "./ui/label";
@@ -10,9 +10,11 @@ import { cn } from "../lib/utils";
 import { grunnlagLabels, klageSchema, type KlageInput } from "../lib/schema";
 import { LetterPreview } from "./letter-preview";
 
+type Photo = { name: string; dataUrl: string };
 type Photos = {
-  gebyr?: { name: string; dataUrl: string };
-  skilt?: { name: string; dataUrl: string };
+  gebyr?: Photo;
+  skilt?: Photo;
+  ekstra?: Photo[];
 };
 
 const STORAGE_KEY = "pklage.draft.v1";
@@ -474,6 +476,17 @@ function StepBody({
   }
 
   if (step === "bilder") {
+    const ekstra = photos.ekstra ?? [];
+    const addEkstra = (p?: Photo) => {
+      if (!p) return;
+      setPhotos((x) => ({ ...x, ekstra: [...(x.ekstra ?? []), p] }));
+    };
+    const removeEkstra = (idx: number) => {
+      setPhotos((x) => ({
+        ...x,
+        ekstra: (x.ekstra ?? []).filter((_, i) => i !== idx),
+      }));
+    };
     return (
       <div className="grid sm:grid-cols-2 gap-4">
         <PhotoSlot
@@ -488,6 +501,25 @@ function StepBody({
           photo={photos.skilt}
           onChange={(p) => setPhotos((x) => ({ ...x, skilt: p }))}
         />
+        {ekstra.map((p, i) => (
+          <PhotoSlot
+            key={`ekstra-${i}`}
+            label={`Tilleggsbilde ${i + 1}`}
+            hint="Valgfritt"
+            photo={p}
+            onChange={(next) => {
+              if (next) {
+                setPhotos((x) => ({
+                  ...x,
+                  ekstra: (x.ekstra ?? []).map((old, idx) => (idx === i ? next : old)),
+                }));
+              } else {
+                removeEkstra(i);
+              }
+            }}
+          />
+        ))}
+        <PhotoAdder onAdd={addEkstra} count={ekstra.length} />
         <div className="sm:col-span-2 text-sm text-[color:var(--color-ink-soft)]">
           Bilder er valgfritt. Har du dem, samler vi dem i samme PDF som klagen — klar til å legges ved i e-posten.
           Bildene behandles lokalt og sendes ikke til oss.
@@ -541,9 +573,9 @@ function PhotoSlot({
 }: {
   label: string;
   hint?: string;
-  photo?: Photos["gebyr"];
+  photo?: Photo;
   required?: boolean;
-  onChange: (p?: Photos["gebyr"]) => void;
+  onChange: (p?: Photo) => void;
 }) {
   const onFile = async (file: File | undefined) => {
     if (!file) return;
@@ -603,6 +635,53 @@ function PhotoSlot({
       {hint && (
         <p className="text-[12px] text-[color:var(--color-ink-soft)] mt-1.5">{hint}</p>
       )}
+    </div>
+  );
+}
+
+function PhotoAdder({
+  onAdd,
+  count,
+}: {
+  onAdd: (p: Photo) => void;
+  count: number;
+}) {
+  const onFile = (file: File | undefined) => {
+    if (!file) return;
+    if (file.size > 6 * 1024 * 1024) {
+      toast.error("Bildet er for stort (maks 6 MB).");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      onAdd({ name: file.name, dataUrl: reader.result as string });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div>
+      <Label>{count === 0 ? "Flere bilder?" : `Legg til enda et bilde`}</Label>
+      <label className="flex flex-col items-center justify-center h-44 border-2 border-dashed border-[color:var(--color-line-strong)] rounded-[10px] cursor-pointer hover:border-[color:var(--color-ink-soft)] hover:bg-[color:var(--color-bg-elev)] transition">
+        <Plus className="h-6 w-6 text-[color:var(--color-ink-soft)]" />
+        <div className="text-sm mt-2 font-medium">Legg til bilde</div>
+        <div className="text-xs text-[color:var(--color-ink-soft)] mt-1">
+          JPG, PNG · maks 6 MB
+        </div>
+        <input
+          type="file"
+          accept="image/*"
+          capture="environment"
+          className="hidden"
+          onChange={(e) => {
+            onFile(e.target.files?.[0]);
+            e.currentTarget.value = "";
+          }}
+        />
+      </label>
+      <p className="text-[12px] text-[color:var(--color-ink-soft)] mt-1.5">
+        Eksempler: nærbilde av skiltet, kvittering, gateskilt, kart-skjermbilde.
+      </p>
     </div>
   );
 }

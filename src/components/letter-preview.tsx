@@ -11,7 +11,7 @@ import { buildKlagePdf } from "../lib/pdf";
 const PRICE_NOK = 149;
 
 type Photo = { name: string; dataUrl: string };
-type Photos = { gebyr?: Photo; skilt?: Photo };
+type Photos = { gebyr?: Photo; skilt?: Photo; ekstra?: Photo[] };
 
 export function LetterPreview({
   letter,
@@ -33,9 +33,11 @@ export function LetterPreview({
   const [paying, setPaying] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [pdfDownloaded, setPdfDownloaded] = useState(false);
-  const orderedPhotos: Photo[] = [photos.gebyr, photos.skilt].filter(
-    (p): p is Photo => Boolean(p),
-  );
+  const orderedPhotos: Photo[] = [
+    photos.gebyr,
+    photos.skilt,
+    ...(photos.ekstra ?? []),
+  ].filter((p): p is Photo => Boolean(p));
 
   const onCheckout = async () => {
     setPaying(true);
