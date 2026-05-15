@@ -35,7 +35,7 @@ const steps = [
   { id: "gebyr", title: "Gebyret", hint: "Detaljer om gebyret" },
   { id: "sted", title: "Stedet", hint: "Hvor og hvilken bil" },
   { id: "grunnlag", title: "Grunnlaget", hint: "Hvorfor mener du det er feil" },
-  { id: "bilder", title: "Bilder", hint: "Last opp bevis" },
+  { id: "bilder", title: "Bilder", hint: "Valgfritt, men styrker klagen" },
   { id: "deg", title: "Deg", hint: "Hvem er du" },
 ] as const;
 
@@ -116,7 +116,7 @@ export function KlageWizard() {
       return !!(data.grunnlag && data.detaljer && data.detaljer.length >= 20);
     }
     if (s === "bilder") {
-      return !!photos.gebyr;
+      return true;
     }
     if (s === "deg") {
       return !!(data.navn && data.epost && data.adresse);
@@ -201,6 +201,7 @@ export function KlageWizard() {
         streaming={streaming}
         paid={paid}
         klage={data as KlageInput}
+        photos={photos}
         onBack={() => setLetter(null)}
         onReset={reset}
       />
@@ -284,7 +285,7 @@ function currentTitle(idx: number) {
     "La oss begynne med gebyret.",
     "Hvor sto bilen parkert?",
     "Hva er grunnlaget for klagen?",
-    "Last opp bilder som bevis.",
+    "Har du bilder? Legg dem ved (valgfritt).",
     "Til slutt — hvem skal underskrive?",
   ][idx];
 }
@@ -477,19 +478,19 @@ function StepBody({
       <div className="grid sm:grid-cols-2 gap-4">
         <PhotoSlot
           label="Bilde av gebyret"
-          required
+          hint="Valgfritt — last opp hvis du har det"
           photo={photos.gebyr}
           onChange={(p) => setPhotos((x) => ({ ...x, gebyr: p }))}
         />
         <PhotoSlot
           label="Bilde av skiltingen"
-          hint="Anbefalt — styrker klagen betydelig"
+          hint="Valgfritt — styrker klagen hvis du har det"
           photo={photos.skilt}
           onChange={(p) => setPhotos((x) => ({ ...x, skilt: p }))}
         />
         <div className="sm:col-span-2 text-sm text-[color:var(--color-ink-soft)]">
-          Bilder behandles lokalt for forhåndsvisning. De refereres som vedlegg i den endelige e-posten,
-          men sendes ikke til oss.
+          Bilder er valgfritt. Har du dem, samler vi dem i samme PDF som klagen — klar til å legges ved i e-posten.
+          Bildene behandles lokalt og sendes ikke til oss.
         </div>
       </div>
     );

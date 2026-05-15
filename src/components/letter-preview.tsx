@@ -1,19 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Check, Copy, Loader2, Lock, Mail, RotateCcw, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Check, Copy, Download, Loader2, Lock, Mail, Paperclip, RotateCcw, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { cn, formatNok } from "../lib/utils";
 import type { KlageInput } from "../lib/schema";
+import { buildKlagePdf } from "../lib/pdf";
 
 const PRICE_NOK = 149;
+
+type Photo = { name: string; dataUrl: string };
+type Photos = { gebyr?: Photo; skilt?: Photo };
 
 export function LetterPreview({
   letter,
   streaming,
   paid,
   klage,
+  photos,
   onBack,
   onReset,
 }: {
@@ -21,10 +26,16 @@ export function LetterPreview({
   streaming: boolean;
   paid: boolean;
   klage: KlageInput;
+  photos: Photos;
   onBack: () => void;
   onReset: () => void;
 }) {
   const [paying, setPaying] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [pdfDownloaded, setPdfDownloaded] = useState(false);
+  const orderedPhotos: Photo[] = [photos.gebyr, photos.skilt].filter(
+    (p): p is Photo => Boolean(p),
+  );
 
   const onCheckout = async () => {
     setPaying(true);
@@ -61,8 +72,54 @@ export function LetterPreview({
     toast.success("Kopiert til utklippstavlen.");
   };
 
-  const sendEmail = () => {
-    const mailto = `mailto:${encodeURIComponent(letter.to)}?subject=${encodeURIComponent(letter.subject)}&body=${encodeURIComponent(letter.body)}`;
+  const downloadPdf = async () => {
+    setDownloading(true);
+    try {
+      const blob = await buildKlagePdf({
+        to: letter.to,
+        subject: letter.subject,
+        body: letter.body,
+        senderName: klage.navn,
+        senderAddress: klage.adresse,
+        saksnummer: klage.saksnummer,
+        selskap: klage.selskap,
+        photos: orderedPhotos,
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const slug = klage.saksnummer.replace(/[^a-z0-9-_]/gi, "") || "klage";
+      a.href = url;
+      a.download = `klage-${slug}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setPdfDownloaded(true);
+      toast.success("PDF lastet ned — legg den ved i e-posten.");
+    } catch (err) {
+      toast.error("Kunne ikke lage PDF. Prøv igjen.");
+      console.error(err);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const openMailClient = () => {
+    const slug = klage.saksnummer.replace(/[^a-z0-9-_]/gi, "") || "sak";
+    const filename = `klage-${slug}.pdf`;
+    const bodyText =
+      `Hei,\n\n` +
+      `Vedlagt følger min formelle klage på parkeringsgebyr` +
+      (klage.saksnummer ? ` (saksnr. ${klage.saksnummer})` : "") +
+      `.\n\n` +
+      `Klagen ligger som vedlegg: ${filename}` +
+      (orderedPhotos.length > 0
+        ? ` (inneholder klagebrev og ${orderedPhotos.length} bilde${orderedPhotos.length > 1 ? "r" : ""}).`
+        : ".") +
+      `\n\n` +
+      `Med vennlig hilsen,\n${klage.navn}`;
+
+    const mailto = `mailto:${encodeURIComponent(letter.to)}?subject=${encodeURIComponent(letter.subject)}&body=${encodeURIComponent(bodyText)}`;
     window.location.href = mailto;
   };
 
@@ -134,17 +191,65 @@ export function LetterPreview({
             </div>
             <p className="text-sm text-[color:var(--color-ink-soft)] mt-2 leading-relaxed">
               {paid
-                ? "Send som e-post direkte. Klagen din er låst opp permanent."
+                ? "To steg: last ned PDF-en, og åpne e-posten — legg ved PDF-en der."
                 : "Du har lest første del. Lås opp resten — engangsbeløp, ingen abonnement."}
             </p>
 
             {paid ? (
-              <div className="mt-5 space-y-2">
-                <Button variant="brand" className="w-full" onClick={sendEmail}>
-                  <Mail className="h-4 w-4" /> Send som e-post
-                </Button>
-                <Button variant="outline" className="w-full" onClick={copy}>
-                  <Copy className="h-4 w-4" /> Kopier hele klagen
+              <div className="mt-5 space-y-3">
+                <div>
+                  <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[color:var(--color-ink-mute)] mb-2">
+                    <span className="h-5 w-5 rounded-full bg-[color:var(--color-ink)] text-white flex items-center justify-center text-[10px] font-bold">1</span>
+                    Last ned PDF
+                  </div>
+                  <Button
+                    variant={pdfDownloaded ? "outline" : "brand"}
+                    className="w-full"
+                    onClick={downloadPdf}
+                    disabled={downloading}
+                  >
+                    {downloading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" /> Lager PDF…
+                      </>
+                    ) : pdfDownloaded ? (
+                      <>
+                        <Check className="h-4 w-4" /> PDF lastet ned
+                      </>
+                    ) : (
+                      <>
+                        <Download className="h-4 w-4" /> Last ned klage-PDF
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-[12px] text-[color:var(--color-ink-soft)] mt-1.5">
+                    Inneholder klagen{orderedPhotos.length > 0 ? ` + ${orderedPhotos.length} bilde${orderedPhotos.length > 1 ? "r" : ""}` : ""} som ett vedlegg.
+                  </p>
+                </div>
+
+                <div className={cn("transition", !pdfDownloaded && "opacity-50")}>
+                  <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[color:var(--color-ink-mute)] mb-2">
+                    <span className={cn(
+                      "h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold",
+                      pdfDownloaded ? "bg-[color:var(--color-ink)] text-white" : "bg-[color:var(--color-line)] text-[color:var(--color-ink-mute)]"
+                    )}>2</span>
+                    Åpne e-post og legg ved PDF-en
+                  </div>
+                  <Button
+                    variant={pdfDownloaded ? "brand" : "outline"}
+                    className="w-full"
+                    onClick={openMailClient}
+                  >
+                    <Mail className="h-4 w-4" /> Åpne e-postklient
+                  </Button>
+                  <p className="text-[12px] text-[color:var(--color-ink-soft)] mt-1.5 flex items-start gap-1">
+                    <Paperclip className="h-3 w-3 mt-0.5 shrink-0" />
+                    Dra PDF-en fra Nedlastinger til e-posten før du sender.
+                  </p>
+                </div>
+
+                <Button variant="ghost" size="sm" className="w-full" onClick={copy}>
+                  <Copy className="h-4 w-4" /> Kopier klagetekst
                 </Button>
               </div>
             ) : (
@@ -166,29 +271,33 @@ export function LetterPreview({
               </Button>
             )}
 
-            <ul className="mt-5 space-y-2 text-sm text-[color:var(--color-ink-soft)]">
-              {[
-                "Betal kun hvis du faktisk sender",
-                "Sikker betaling via Stripe",
-                "Pengene tilbake hvis klagen er feil",
-              ].map((x) => (
-                <li key={x} className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-[color:var(--color-accent)] mt-0.5 shrink-0" />
-                  {x}
-                </li>
-              ))}
-            </ul>
+            {!paid && (
+              <ul className="mt-5 space-y-2 text-sm text-[color:var(--color-ink-soft)]">
+                {[
+                  "Betal kun hvis du faktisk sender",
+                  "Sikker betaling via Stripe",
+                  "Pengene tilbake hvis klagen er feil",
+                ].map((x) => (
+                  <li key={x} className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-[color:var(--color-accent)] mt-0.5 shrink-0" />
+                    {x}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
-          <div className="paper p-5">
-            <div className="flex items-center gap-2 text-sm">
-              <ShieldCheck className="h-5 w-5 text-[color:var(--color-accent)]" />
-              <span className="font-semibold">Husk vedlegg</span>
+          {!paid && (
+            <div className="paper p-5">
+              <div className="flex items-center gap-2 text-sm">
+                <ShieldCheck className="h-5 w-5 text-[color:var(--color-accent)]" />
+                <span className="font-semibold">Bildene er med</span>
+              </div>
+              <p className="text-sm text-[color:var(--color-ink-soft)] mt-2 leading-relaxed">
+                Når du har låst opp, samler vi klagebrevet og bildene dine i én PDF du legger ved e-posten.
+              </p>
             </div>
-            <p className="text-sm text-[color:var(--color-ink-soft)] mt-2 leading-relaxed">
-              Legg ved bilder av gebyret og skiltingen når du sender e-posten — klagen viser til dem.
-            </p>
-          </div>
+          )}
         </aside>
       </div>
     </div>
