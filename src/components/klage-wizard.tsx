@@ -19,6 +19,36 @@ type Photos = {
 
 const STORAGE_KEY = "pklage.draft.v1";
 
+function fingerprintData(data: Partial<KlageInput>): string {
+  const fields: (keyof KlageInput)[] = [
+    "selskap",
+    "saksnummer",
+    "dato",
+    "belop",
+    "sted",
+    "regnummer",
+    "grunnlag",
+    "detaljer",
+    "navn",
+    "epost",
+    "adresse",
+  ];
+  return fields.map((k) => `${k}=${data[k] ?? ""}`).join("|");
+}
+
+function readFingerprintFromStorage(): string | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (typeof parsed?.fingerprint === "string") return parsed.fingerprint;
+    if (parsed?.data) return fingerprintData(parsed.data);
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 const initialState: Partial<KlageInput> = {
   selskap: "",
   saksnummer: "",
@@ -49,7 +79,10 @@ export function KlageWizard() {
   const [stepIdx, setStepIdx] = useState(0);
   const [letter, setLetter] = useState<{ to: string; subject: string; body: string } | null>(null);
   const [streaming, setStreaming] = useState(false);
-  const [paid, setPaid] = useState(false);
+  const [paidFor, setPaidFor] = useState<string | null>(null);
+
+  const currentFingerprint = useMemo(() => fingerprintData(data), [data]);
+  const paid = paidFor !== null && paidFor === currentFingerprint;
 
   useEffect(() => {
     try {
@@ -60,7 +93,7 @@ export function KlageWizard() {
         if (parsed?.photos) setPhotos(parsed.photos);
         if (parsed?.stepIdx) setStepIdx(parsed.stepIdx);
         if (parsed?.letter) setLetter(parsed.letter);
-        if (parsed?.paid) setPaid(true);
+        if (typeof parsed?.paidFor === "string") setPaidFor(parsed.paidFor);
       }
     } catch {}
 
@@ -78,7 +111,7 @@ export function KlageWizard() {
         .then((res) => {
           toast.dismiss(verifyToast);
           if (res.paid) {
-            setPaid(true);
+            setPaidFor((prev) => prev ?? readFingerprintFromStorage());
             toast.success("Betalt — klagen er låst opp.");
           } else {
             toast.error(`Betaling ikke fullført: ${res.status || res.error || "ukjent"}`);
@@ -98,10 +131,23 @@ export function KlageWizard() {
     try {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ data, photos, stepIdx, letter, paid }),
+        JSON.stringify({
+          data,
+          photos,
+          stepIdx,
+          letter,
+          paidFor,
+          fingerprint: currentFingerprint,
+        }),
       );
     } catch {}
-  }, [data, photos, stepIdx, letter, paid]);
+  }, [data, photos, stepIdx, letter, paidFor, currentFingerprint]);
+
+  useEffect(() => {
+    if (paidFor && paidFor !== currentFingerprint) {
+      setLetter(null);
+    }
+  }, [paidFor, currentFingerprint]);
 
   const set = <K extends keyof KlageInput>(key: K, value: KlageInput[K]) =>
     setData((d) => ({ ...d, [key]: value }));
@@ -190,7 +236,7 @@ export function KlageWizard() {
     setPhotos({});
     setStepIdx(0);
     setLetter(null);
-    setPaid(false);
+    setPaidFor(null);
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {}
