@@ -15,7 +15,7 @@ type Photos = {
   skilt?: { name: string; dataUrl: string };
 };
 
-const STORAGE_KEY = "parkeringsklagen.draft.v1";
+const STORAGE_KEY = "pklage.draft.v1";
 
 const initialState: Partial<KlageInput> = {
   selskap: "",

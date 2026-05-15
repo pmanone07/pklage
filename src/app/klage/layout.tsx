@@ -14,7 +14,7 @@ export default function KlageLayout({ children }: { children: React.ReactNode })
               P
             </span>
             <span className="font-display text-lg tracking-tight">
-              Parkeringsklagen
+              Pklage<span className="text-[color:var(--color-brand)]">.no</span>
             </span>
           </Link>
           <Link

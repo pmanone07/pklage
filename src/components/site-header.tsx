@@ -12,10 +12,7 @@ export function SiteHeader() {
             P
           </span>
           <span className="font-display text-lg tracking-tight">
-            Parkeringsklagen
-          </span>
-          <span className="hidden sm:inline text-[11px] uppercase tracking-widest text-[color:var(--color-ink-mute)] ml-2">
-            .no
+            Pklage<span className="text-[color:var(--color-brand)]">.no</span>
           </span>
         </Link>
         <nav className="flex items-center gap-1 sm:gap-4 text-sm">

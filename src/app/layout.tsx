@@ -17,10 +17,10 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://parkeringsklagen.no"),
+  metadataBase: new URL("https://pklage.no"),
   title: {
-    default: "Parkeringsklagen — Klage på parkeringsgebyr på 60 sekunder",
-    template: "%s · Parkeringsklagen",
+    default: "Pklage.no — Klage på parkeringsgebyr på 60 sekunder",
+    template: "%s · Pklage.no",
   },
   description:
     "Fikk du urettmessig parkeringsgebyr? Vi skriver klagen gratis. Du betaler 149 kr kun hvis du velger å sende den.",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     "parkeringsklagenemnda",
   ],
   openGraph: {
-    title: "Parkeringsklagen — Klage på parkeringsgebyr på 60 sekunder",
+    title: "Pklage.no — Klage på parkeringsgebyr på 60 sekunder",
     description:
       "AI-generert, juridisk korrekt klage. Gratis å lage. Betal kun hvis du sender.",
     type: "website",

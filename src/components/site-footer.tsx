@@ -6,7 +6,7 @@ export function SiteFooter() {
       <div className="container-wide py-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 text-sm">
         <div>
           <div className="font-display text-lg tracking-tight">
-            Parkeringsklagen
+            Pklage<span className="text-[color:var(--color-brand)]">.no</span>
           </div>
           <p className="mt-2 text-[color:var(--color-ink-soft)] leading-relaxed">
             En enklere måte å klage på urettmessige parkeringsgebyrer.
@@ -33,13 +33,13 @@ export function SiteFooter() {
           <ul className="space-y-1.5 text-[color:var(--color-ink-soft)]">
             <li><Link href="/personvern" className="hover:text-[color:var(--color-ink)]">Personvern</Link></li>
             <li><Link href="/vilkar" className="hover:text-[color:var(--color-ink)]">Vilkår</Link></li>
-            <li><a href="mailto:hei@parkeringsklagen.no" className="hover:text-[color:var(--color-ink)]">Kontakt</a></li>
+            <li><a href="mailto:hei@pklage.no" className="hover:text-[color:var(--color-ink)]">Kontakt</a></li>
           </ul>
         </div>
       </div>
       <div className="border-t border-[color:var(--color-line)]">
         <div className="container-wide py-5 flex flex-col sm:flex-row justify-between gap-2 text-xs text-[color:var(--color-ink-mute)]">
-          <span>© {new Date().getFullYear()} Parkeringsklagen. Ikke juridisk rådgivning.</span>
+          <span>© {new Date().getFullYear()} Pklage.no. Ikke juridisk rådgivning.</span>
           <span>Laget i Norge 🇳🇴</span>
         </div>
       </div>

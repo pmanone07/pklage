@@ -1,4 +1,4 @@
-# Parkeringsklagen
+# Pklage.no
 
 > Klage på urettmessig parkeringsgebyr — på 60 sekunder.
 
