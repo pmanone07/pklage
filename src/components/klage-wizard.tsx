@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Camera, Check, FileText, Loader2, Plus, Sparkles, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Camera, Check, FileText, Loader2, Plus, RotateCcw, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 import { Input, Textarea } from "./ui/input";
 import { Label, Hint } from "./ui/label";
@@ -210,8 +210,22 @@ export function KlageWizard() {
     );
   }
 
+  const hasDraft =
+    Object.values(data).some((v) => v) ||
+    !!photos.gebyr ||
+    !!photos.skilt ||
+    (photos.ekstra?.length ?? 0) > 0;
+
   return (
     <div className="container-tight py-10 sm:py-14">
+      <div className="flex items-center justify-end mb-3 min-h-[28px]">
+        {hasDraft && (
+          <Button variant="ghost" size="sm" onClick={reset} type="button">
+            <RotateCcw className="h-4 w-4" /> Start på nytt
+          </Button>
+        )}
+      </div>
+
       <Progress idx={stepIdx} total={steps.length} />
 
       <div className="paper p-6 sm:p-10 mt-8 fade-in" key={stepIdx}>
