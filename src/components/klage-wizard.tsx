@@ -186,6 +186,13 @@ export function KlageWizard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ data: result.data, hasSkiltImg: !!photos.skilt }),
       });
+      if (res.status === 429) {
+        const body = await res.json().catch(() => ({}));
+        const mins = Math.max(1, Math.ceil((body.retryAfterSec ?? 60) / 60));
+        throw new Error(
+          body.error || `For mange forsøk. Prøv igjen om ${mins} minutt${mins === 1 ? "" : "er"}.`,
+        );
+      }
       if (!res.ok || !res.body) throw new Error("Kunne ikke generere klage");
 
       const reader = res.body.getReader();
@@ -223,7 +230,8 @@ export function KlageWizard() {
         }
       }
     } catch (err) {
-      toast.error("Noe gikk galt. Prøv igjen.");
+      const msg = err instanceof Error ? err.message : "Noe gikk galt. Prøv igjen.";
+      toast.error(msg);
       console.error(err);
     } finally {
       setStreaming(false);

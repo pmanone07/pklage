@@ -11,6 +11,8 @@
   "dependencies": {
     "@ai-sdk/react": "^3.0.184",
     "@stripe/stripe-js": "^9.5.0",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.38.0",
     "@vercel/analytics": "^2.0.1",
     "ai": "^6.0.182",
     "class-variance-authority": "^0.7.1",

@@ -1,6 +1,7 @@
 import { streamText } from "ai";
 import { klageSchema, grunnlagLabels, type KlageInput } from "../../../lib/schema";
 import { findReceiverEmail } from "../../../lib/receivers";
+import { rateLimiter, getClientIp } from "../../../lib/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -23,6 +24,31 @@ const lawHints: Record<KlageInput["grunnlag"], string> = {
 };
 
 export async function POST(req: Request) {
+  if (rateLimiter) {
+    const ip = getClientIp(req);
+    const { success, limit, remaining, reset } = await rateLimiter.limit(ip);
+    if (!success) {
+      const retryAfterSec = Math.max(1, Math.ceil((reset - Date.now()) / 1000));
+      return new Response(
+        JSON.stringify({
+          error:
+            "Du har generert mange klager den siste timen. Vent litt og prøv igjen.",
+          retryAfterSec,
+        }),
+        {
+          status: 429,
+          headers: {
+            "Content-Type": "application/json",
+            "Retry-After": String(retryAfterSec),
+            "X-RateLimit-Limit": String(limit),
+            "X-RateLimit-Remaining": String(remaining),
+            "X-RateLimit-Reset": String(reset),
+          },
+        },
+      );
+    }
+  }
+
   const json = await req.json().catch(() => null);
   if (!json) return new Response("Bad request", { status: 400 });
 
