@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
+import { SampleSection } from "../components/sample-modal";
 import { ArrowRight, Camera, Check, FileText, Mail, ShieldCheck, Sparkles } from "lucide-react";
 
 export default function HomePage() {
@@ -11,7 +12,7 @@ export default function HomePage() {
         <Hero />
         <SocialProof />
         <HowItWorks />
-        <Sample />
+        <SampleSection />
         <Grounds />
         <Pricing />
         <FAQ />
@@ -31,7 +32,7 @@ function Hero() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[color:var(--color-ink-soft)] mb-6">
               <span className="pulse-dot" />
-              Live i Norge — 4 217 klager generert
+              Nytt i Norge — bygget av jurister & utviklere
             </div>
             <h1 className="text-[42px] sm:text-[58px] leading-[1.02] tracking-tight">
               Urettmessig parkerings&shy;gebyr?
@@ -240,72 +241,6 @@ function HowItWorks() {
             </p>
           </div>
         ))}
-      </div>
-    </section>
-  );
-}
-
-function Sample() {
-  return (
-    <section className="bg-[color:var(--color-accent)] text-white relative overflow-hidden">
-      <div aria-hidden className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: "radial-gradient(white 1px, transparent 1px)", backgroundSize: "4px 4px" }} />
-      <div className="container-wide py-20 sm:py-28 grid lg:grid-cols-2 gap-12 items-center relative">
-        <div>
-          <div className="text-xs uppercase tracking-[0.18em] text-white/60 mb-3">
-            Eksempel
-          </div>
-          <h2 className="text-3xl sm:text-5xl tracking-tight">
-            Slik ser klagen din ut.
-          </h2>
-          <p className="mt-4 text-white/75 text-lg leading-relaxed">
-            Ingen Word-mal. Ingen rar formulering. Skrevet i tonen
-            parkeringsselskaper faktisk responderer på — formell, kort,
-            med konkrete henvisninger til parkeringsforskriften.
-          </p>
-          <ul className="mt-6 space-y-2 text-[15px] text-white/90">
-            {[
-              "Henviser til riktig paragraf (§ 31, § 36, § 37)",
-              "Krever 14-dagers svarfrist (lovpålagt)",
-              "Inkluderer bilder som vedlegg-referanser",
-              "Klar e-post til riktig saksbehandler",
-            ].map((x) => (
-              <li key={x} className="flex items-start gap-2">
-                <Check className="h-5 w-5 text-[color:var(--color-brand-soft)] mt-0.5 shrink-0" />
-                {x}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="paper p-8 text-[color:var(--color-ink)] relative">
-          <div className="text-[11px] uppercase tracking-widest text-[color:var(--color-ink-mute)]">
-            Til: kundeservice@onepark.no
-          </div>
-          <div className="text-[11px] text-[color:var(--color-ink-mute)] mb-4">
-            Emne: Klage på kontrollsanksjon — saksnr. 2026-04-18-A
-          </div>
-
-          <p className="text-[14.5px] leading-relaxed">
-            <strong>Onepark AS,</strong>
-            <br /><br />
-            Jeg viser til ilagt kontrollsanksjon datert 12. mai 2026, kr 600,–,
-            og bestrider herved kravet i sin helhet.
-            <br /><br />
-            Som det fremgår av vedlagte bilder var skiltingen på Storgata 14 ved
-            ileggelsestidspunktet helt eller delvis tildekket av løvverk fra
-            tilgrensende trær. Dette innebærer at forskriftens krav til{" "}
-            <em>tydelig opplysning</em> om vilkår, jf.{" "}
-            <strong>parkeringsforskriften § 36 første ledd</strong>, ikke var
-            oppfylt.
-            <br /><br />
-            Jeg krever derfor at gebyret oppheves. Jeg ber om skriftlig svar
-            innen 14 dager fra dags dato, jf. forskriftens § 44.
-            <br /><br />
-            Med vennlig hilsen,
-            <br />
-            <span className="text-[color:var(--color-ink-mute)]">Ola Nordmann</span>
-          </p>
-        </div>
       </div>
     </section>
   );
