@@ -103,6 +103,12 @@ export function KlageWizard() {
       window.history.replaceState({}, "", "/klage");
     }
 
+    const prefillSelskap = params.get("selskap");
+    if (prefillSelskap) {
+      setData((d) => (d.selskap ? d : { ...d, selskap: prefillSelskap }));
+      window.history.replaceState({}, "", "/klage");
+    }
+
     const sessionId = params.get("session_id");
     if (sessionId) {
       const verifyToast = toast.loading("Bekrefter betaling…");

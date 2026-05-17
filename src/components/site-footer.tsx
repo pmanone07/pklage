@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { companies } from "../lib/companies";
 
 export function SiteFooter() {
   return (
     <footer className="mt-24 border-t border-[color:var(--color-line)] bg-[color:var(--color-bg-elev)]">
-      <div className="container-wide py-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 text-sm">
+      <div className="container-wide py-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5 text-sm">
         <div>
           <div className="font-display text-lg tracking-tight">
             Pklage<span className="text-[color:var(--color-brand)]">.no</span>
@@ -26,6 +27,18 @@ export function SiteFooter() {
             <li><Link href="/#faq" className="hover:text-[color:var(--color-ink)]">FAQ</Link></li>
             <li><Link href="/grunnlag" className="hover:text-[color:var(--color-ink)]">Grunnlag for klage</Link></li>
             <li><a href="https://www.parkeringsklagenemnda.no" target="_blank" rel="noopener" className="hover:text-[color:var(--color-ink)]">Parkeringsklagenemnda ↗</a></li>
+          </ul>
+        </div>
+        <div>
+          <div className="font-semibold mb-2">Klage på</div>
+          <ul className="space-y-1.5 text-[color:var(--color-ink-soft)]">
+            {companies.map((c) => (
+              <li key={c.slug}>
+                <Link href={`/klage-paa/${c.slug}`} className="hover:text-[color:var(--color-ink)]">
+                  {c.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
         <div>
