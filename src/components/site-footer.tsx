@@ -33,7 +33,7 @@ export function SiteFooter() {
           <ul className="space-y-1.5 text-[color:var(--color-ink-soft)]">
             <li><Link href="/personvern" className="hover:text-[color:var(--color-ink)]">Personvern</Link></li>
             <li><Link href="/vilkar" className="hover:text-[color:var(--color-ink)]">Vilkår</Link></li>
-            <li><a href="mailto:hei@pklage.no" className="hover:text-[color:var(--color-ink)]">Kontakt</a></li>
+            <li><Link href="/kontakt" className="hover:text-[color:var(--color-ink)]">Kontakt</Link></li>
           </ul>
         </div>
       </div>
