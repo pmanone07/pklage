@@ -30,10 +30,6 @@ function Hero() {
       <div className="container-wide pt-14 sm:pt-20 pb-16 sm:pb-24 relative">
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[color:var(--color-ink-soft)] mb-6">
-              <span className="pulse-dot" />
-              Nytt i Norge — bygget av jurister & utviklere
-            </div>
             <h1 className="text-[42px] sm:text-[58px] leading-[1.02] tracking-tight">
               Urettmessig parkerings&shy;gebyr?
               <span className="block text-[color:var(--color-brand)]">

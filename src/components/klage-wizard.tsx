@@ -99,7 +99,15 @@ export function KlageWizard() {
 
     const params = new URLSearchParams(window.location.search);
     if (params.get("cancelled") === "1") {
-      toast.info("Betaling avbrutt. Klagen din er fortsatt her.");
+      setData(initialState);
+      setPhotos({});
+      setStepIdx(0);
+      setLetter(null);
+      setPaidFor(null);
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {}
+      toast.info("Betaling avbrutt. Skjemaet er tømt.");
       window.history.replaceState({}, "", "/klage");
     }
 
