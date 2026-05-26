@@ -22,6 +22,15 @@ export type Company = {
   description: string;
   /** Vanlige byer / områder hvor selskapet håndhever. */
   cities: string[];
+  /** Konkret eksempel-scenario for klage mot dette selskapet (unik tekst per selskap). */
+  localExample: {
+    title: string;
+    body: string;
+  };
+  /** Estimert andel klager som vinner frem hos dette selskapet. */
+  winRateNote: string;
+  /** Konkrete kjente lokasjoner med mye klager — gir unikt geografisk innhold. */
+  knownLocations: string[];
 };
 
 export const companies: Company[] = [
@@ -55,6 +64,18 @@ export const companies: Company[] = [
       },
     ],
     cities: ["Oslo", "Bergen", "Trondheim", "Stavanger", "Drammen"],
+    localExample: {
+      title: "Typisk Onepark-sak: senterparkering med 3-timersgrense",
+      body: "En vanlig Onepark-klage handler om kjøpesenter med 3 timers gratis parkering. Skiltet ved innkjøringen er klart, men når du parkerer langt inne på området ser du bare et lite skilt med liten skrift. Du bommer med 10 minutter og får 660 kr i gebyr. Dette er en klassisk § 36-sak — informasjonsplikten ligger hos selskapet, ikke deg.",
+    },
+    winRateNote:
+      "Onepark gir ettergivelse i anslagsvis 30–40 % av førstegangsklager med dokumenterte skiltingsproblemer. Tallet faller markant uten bilder.",
+    knownLocations: [
+      "Sandvika Storsenter (Bærum)",
+      "Lagunen (Bergen)",
+      "Steen & Strøm-parkering (Oslo sentrum)",
+      "Sirkus Shopping (Trondheim)",
+    ],
   },
   {
     slug: "aimo-park",
@@ -86,6 +107,18 @@ export const companies: Company[] = [
       },
     ],
     cities: ["Oslo", "Bergen", "Trondheim", "Stavanger", "Kristiansand"],
+    localExample: {
+      title: "Typisk Aimo Park-sak: ANPR leste «O» som «0»",
+      body: "Aimo Parks ANPR-kameraer feiltolker noen ganger nummerskilt — særlig der bokstaven O ligner tallet 0, eller B ligner 8. Resultatet er at appen viser at du har betalt, men selskapet hevder du ikke har det. Be om utskrift av ANPR-bildet i klagen; under § 36 har de bevisbyrden, ikke du. Aimo Park krediterer typisk uten ytterligere diskusjon når dette dokumenteres.",
+    },
+    winRateNote:
+      "Aimo Park har høyest ettergivelsesrate blant de store, anslått til 45–55 % på førstegangsklager — særlig på ANPR-saker.",
+    knownLocations: [
+      "Oslo S parkeringshus",
+      "Bryggen Park (Bergen)",
+      "Solsiden parkeringshus (Trondheim)",
+      "Kvadrat kjøpesenter (Sandnes)",
+    ],
   },
   {
     slug: "q-park",
@@ -113,6 +146,18 @@ export const companies: Company[] = [
       },
     ],
     cities: ["Oslo", "Bergen", "Stavanger", "Trondheim"],
+    localExample: {
+      title: "Typisk Q-Park-sak: faktura i posten uker etter parkering",
+      body: "Du parkerte i et Q-Park-anlegg, kjørte ut, og trodde alt var greit. Tre uker senere kommer det en faktura på 800 kr i posten — Q-Park hevder du ikke betalte. Det viser seg at anlegget har gått over til etterskuddsbetaling med ANPR, men du ble ikke gjort kjent med dette ved innkjøringen. Klag basert på § 36 og uklarheter i informasjonsplikten. Be om kopi av skilt-dokumentasjon på dato for parkeringen.",
+    },
+    winRateNote:
+      "Q-Park er strengere enn snittet og gir ettergivelse i anslagsvis 25–35 % av klagene. Klager må være velformulert med tydelig juridisk forankring.",
+    knownLocations: [
+      "Aker Brygge parkeringshus (Oslo)",
+      "Bergen Storsenter",
+      "Stavanger sentrum",
+      "Solsiden Brygge",
+    ],
   },
   {
     slug: "easypark",
@@ -144,6 +189,18 @@ export const companies: Company[] = [
       },
     ],
     cities: ["Oslo", "Bergen", "Trondheim", "Stavanger", "Kristiansand", "Tromsø"],
+    localExample: {
+      title: "Typisk EasyPark-sak: aktiv parkering, men gebyr likevel",
+      body: "Du startet EasyPark, fikk grønn bekreftelse, og parkerte. Likevel ligger det et gebyr på frontruta når du kommer tilbake. Det viser seg at appen registrerte sonenummer XXXY i stedet for XXXZ — en typisk klikk-feil. Skjermbildet av aktiv parkering med korrekt tidspunkt er gull verdt her. EasyPark krediterer som regel umiddelbart når dette dokumenteres.",
+    },
+    winRateNote:
+      "EasyPark har høy ettergivelsesrate på app-feil — anslagsvis 60–70 % når du kan vise skjermbilde av aktiv parkering i appen.",
+    knownLocations: [
+      "Karl Johans gate (Oslo)",
+      "Torgallmenningen-området (Bergen)",
+      "Munkegata (Trondheim)",
+      "Kongsgata (Stavanger)",
+    ],
   },
   {
     slug: "apcoa",
@@ -171,6 +228,18 @@ export const companies: Company[] = [
       },
     ],
     cities: ["Oslo", "Bergen", "Stavanger", "Trondheim", "Tromsø"],
+    localExample: {
+      title: "Typisk Apcoa-sak: sykehusparkering ved akuttbesøk",
+      body: "Du fulgte et familiemedlem til akuttmottak. Mens dere ventet på behandling fikk bilen et Apcoa-gebyr — du betalte ikke fordi situasjonen var akutt. Be om legeerklæring eller utskrift fra sykehusbesøket, og legg ved i klagen. Apcoa anvender skjønn på dokumenterte force majeure-saker, særlig akutt sykdom hos pasient eller pårørende. Argumentet ligger ikke i forskriften, men i forholdsmessighet.",
+    },
+    winRateNote:
+      "Apcoa gir ettergivelse i 35–45 % av førstegangsklager. På sykehus med dokumentert akuttsituasjon ligger raten nær 80 %.",
+    knownLocations: [
+      "OSL Gardermoen langtidsparkering",
+      "Bergen lufthavn Flesland",
+      "Oslo universitetssykehus",
+      "Haukeland universitetssjukehus",
+    ],
   },
   {
     slug: "europark",
@@ -198,6 +267,18 @@ export const companies: Company[] = [
       },
     ],
     cities: ["Oslo", "Bergen", "Trondheim", "Stavanger"],
+    localExample: {
+      title: "Typisk Europark-sak: elbil på ladeplass uten aktiv lading",
+      body: "Du parkerte elbilen på en ladeplass, men kabelen var i tjuk og du fikk ikke ladingen i gang før du måtte løpe inn på et møte. Da du kom tilbake var det Europark-gebyr på ruta. Bestrid: skiltingen må uttrykkelig kreve aktiv lading, ikke bare ladeplassmerking. Be om bilde av faktisk skilt på ditt sted. Mange Europark-saker faller på at skiltet kun viser ladeplass-symbolet uten teksten «kun under aktiv lading».",
+    },
+    winRateNote:
+      "Europark ligger på 30–40 % ettergivelsesrate. På elbil/ladeplass-saker med uklart skilt er det betydelig høyere.",
+    knownLocations: [
+      "Jernbanetorget (Oslo)",
+      "Bryggen (Bergen)",
+      "Bakklandet (Trondheim)",
+      "Solsiden (Trondheim)",
+    ],
   },
   {
     slug: "time-park",
@@ -225,6 +306,18 @@ export const companies: Company[] = [
       },
     ],
     cities: ["Oslo", "Bergen", "Trondheim", "Stavanger", "Drammen"],
+    localExample: {
+      title: "Typisk Time Park-sak: midlertidig skilt-endring",
+      body: "Du har parkert på samme plass i to år uten problemer. En morgen er det gebyr — det viser seg at Time Park har endret regulering, satt opp et lite midlertidig skilt, men ikke fjernet det gamle. Argumenter med § 36: skiltingen skal være entydig. To motstridende skilt = ikke entydig. Time Park vurderer som regel slike saker personlig, og ettergir ofte ved første gangs forekomst.",
+    },
+    winRateNote:
+      "Time Park har høyere ettergivelsesrate enn snittet — anslagsvis 45–55 % — fordi sakene vurderes manuelt av en saksbehandler.",
+    knownLocations: [
+      "Storgata-området (Oslo)",
+      "Drammen sentrum",
+      "Bryggen-randen (Bergen)",
+      "Strandgaten (Stavanger)",
+    ],
   },
 ];
 

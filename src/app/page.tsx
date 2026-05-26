@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
 import { SampleSection } from "../components/sample-modal";
+import { companies } from "../lib/companies";
 import { ArrowRight, Camera, Check, FileText, Mail, ShieldCheck, Sparkles } from "lucide-react";
 
 export default function HomePage() {
@@ -14,6 +15,7 @@ export default function HomePage() {
         <HowItWorks />
         <SampleSection />
         <Grounds />
+        <CompanyDirectory />
         <Pricing />
         <FAQ />
         <FinalCta />
@@ -276,6 +278,51 @@ function Grounds() {
               </p>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CompanyDirectory() {
+  return (
+    <section className="border-y border-[color:var(--color-line)] bg-[color:var(--color-bg-elev)]">
+      <div className="container-wide py-20 sm:py-28">
+        <div className="grid lg:grid-cols-[1fr_2fr] gap-12">
+          <div>
+            <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-brand)] mb-3">
+              Selskap-spesifikke guider
+            </div>
+            <h2 className="text-3xl sm:text-5xl tracking-tight">
+              Hvilket selskap ga deg gebyret?
+            </h2>
+            <p className="mt-4 text-[color:var(--color-ink-soft)] leading-relaxed">
+              Hver parkeringsoperatør har egne klagerutiner, e-postadresser og
+              kjente svakheter i håndhevingen. Vi har skrevet egne guider for
+              de største — med riktig mottaker, frister og hvilke argumenter
+              som faktisk virker hos akkurat dem.
+            </p>
+          </div>
+          <ul className="grid sm:grid-cols-2 gap-3">
+            {companies.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={`/klage-paa/${c.slug}`}
+                  className="paper p-5 flex justify-between items-start gap-4 hover:-translate-y-0.5 transition group"
+                >
+                  <div>
+                    <div className="font-display text-lg leading-tight">
+                      Klage på {c.name}
+                    </div>
+                    <div className="mt-1.5 text-[13px] text-[color:var(--color-ink-soft)] line-clamp-2">
+                      {c.cities.slice(0, 3).join(" · ")} · {c.responseDays} dagers svarfrist
+                    </div>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-[color:var(--color-ink-mute)] mt-1 group-hover:translate-x-0.5 group-hover:text-[color:var(--color-brand)] transition shrink-0" />
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

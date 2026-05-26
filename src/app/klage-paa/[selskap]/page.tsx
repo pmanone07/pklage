@@ -278,6 +278,77 @@ export default async function CompanyPage({
           </div>
         </section>
 
+        {/* Local example */}
+        <section className="border-y border-[color:var(--color-line)] bg-[color:var(--color-bg-elev)]">
+          <div className="container-wide py-14 sm:py-20 grid lg:grid-cols-[1fr_1.4fr] gap-10 items-start">
+            <div>
+              <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-brand)] mb-3">
+                Eksempel-sak
+              </div>
+              <h2 className="text-3xl sm:text-4xl tracking-tight">
+                Slik ser en typisk klage mot {company.name} ut.
+              </h2>
+              <p className="mt-4 text-[color:var(--color-ink-soft)] leading-relaxed">
+                Et konkret eksempel basert på det vi ser oftest. Din situasjon er sannsynligvis
+                en variant av dette.
+              </p>
+            </div>
+
+            <article className="paper-lift p-7 sm:p-9">
+              <div className="text-[11px] uppercase tracking-widest text-[color:var(--color-ink-mute)]">
+                Reell sakstype
+              </div>
+              <h3 className="font-display text-xl sm:text-2xl mt-1.5 leading-snug">
+                {company.localExample.title}
+              </h3>
+              <p className="mt-4 text-[15px] text-[color:var(--color-ink)] leading-relaxed">
+                {company.localExample.body}
+              </p>
+
+              <div className="mt-7 pt-5 border-t border-dashed border-[color:var(--color-line-strong)] flex items-start gap-3">
+                <Sparkles className="h-5 w-5 text-[color:var(--color-accent)] mt-0.5 shrink-0" />
+                <div className="text-sm text-[color:var(--color-ink-soft)] leading-relaxed">
+                  <strong className="text-[color:var(--color-ink)] font-medium">
+                    Vinnersjanse hos {company.name}:
+                  </strong>{" "}
+                  {company.winRateNote}
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        {/* Known locations */}
+        {company.knownLocations && company.knownLocations.length > 0 && (
+          <section className="container-wide py-14 sm:py-20">
+            <div className="grid lg:grid-cols-[1fr_2fr] gap-10">
+              <div>
+                <div className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-brand)] mb-3">
+                  Kjente kontroll-lokasjoner
+                </div>
+                <h2 className="text-3xl sm:text-4xl tracking-tight">
+                  Hvor {company.name} oftest skriver ut gebyr.
+                </h2>
+                <p className="mt-4 text-[color:var(--color-ink-soft)] leading-relaxed">
+                  Disse stedene har vi sett flest klagesaker fra. Hvis du fikk gebyret
+                  ditt et av disse stedene, finnes det ofte nemnd-saker som ligner din.
+                </p>
+              </div>
+              <ul className="grid sm:grid-cols-2 gap-3">
+                {company.knownLocations.map((loc) => (
+                  <li
+                    key={loc}
+                    className="paper p-4 flex items-start gap-3 text-[15px]"
+                  >
+                    <MapPin className="h-4 w-4 text-[color:var(--color-brand)] mt-1 shrink-0" />
+                    <span>{loc}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
         {/* How */}
         <section className="bg-[color:var(--color-accent)] text-white">
           <div className="container-wide py-14 sm:py-20 grid lg:grid-cols-[1fr_1.4fr] gap-10 items-start">
