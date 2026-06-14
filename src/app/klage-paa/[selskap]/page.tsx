@@ -32,12 +32,25 @@ export async function generateMetadata({
   const company = getCompanyBySlug(selskap);
   if (!company) return { title: "Selskap ikke funnet" };
 
-  const title = `Klage på ${company.name} parkeringsgebyr`;
-  const description = `Klage på parkeringsgebyr fra ${company.legalName}. Send en juridisk korrekt klage på 60 sekunder — gratis å lage, 149 kr kun hvis du sender.`;
+  const title = `Klage på ${company.name} parkeringsgebyr og parkeringsbot`;
+  const description = `Klage på parkeringsgebyr eller parkeringsbot fra ${company.legalName}. Send en juridisk korrekt klage på 60 sekunder — gratis å lage, 149 kr kun hvis du sender.`;
 
   return {
     title,
     description,
+    keywords: [
+      `klage ${company.name}`,
+      `klage på ${company.name}`,
+      `${company.name} parkeringsbot`,
+      `${company.name} parkerings bot`,
+      `${company.name} parkeringbot`,
+      `${company.name} parkering bot`,
+      `${company.name} parkeringsgebyr`,
+      "parkeringsbot",
+      "parkerings bot",
+      "parkeringbot",
+      "parkering bot",
+    ],
     alternates: {
       canonical: `/klage-paa/${company.slug}`,
     },
@@ -125,7 +138,7 @@ export default async function CompanyPage({
                 <p className="mt-5 text-lg text-[color:var(--color-ink-soft)] leading-relaxed">
                   {company.description}{" "}
                   <strong className="text-[color:var(--color-ink)] font-medium">
-                    Vi skriver klagen gratis.
+                    Vi skriver klagen på parkeringsboten gratis.
                   </strong>{" "}
                   Du betaler 149 kr kun hvis du faktisk sender den.
                 </p>
@@ -482,7 +495,7 @@ export default async function CompanyPage({
             <div className="relative">
               <ShieldCheck className="h-10 w-10 text-[color:var(--color-accent)] mx-auto mb-4" />
               <h2 className="text-3xl sm:text-4xl tracking-tight max-w-2xl mx-auto">
-                Klag på {company.name}-gebyret nå — fristen er 3 uker.
+                Klag på parkeringsboten fra {company.name} nå — fristen er 3 uker.
               </h2>
               <p className="mt-3 text-[color:var(--color-ink-soft)] max-w-xl mx-auto">
                 Gratis å lage klagen. Du leser hele før du bestemmer deg. 149 kr kun

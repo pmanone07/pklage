@@ -10,7 +10,7 @@ export function SiteFooter() {
             Pklage<span className="text-[color:var(--color-brand)]">.no</span>
           </div>
           <p className="mt-2 text-[color:var(--color-ink-soft)] leading-relaxed">
-            En enklere måte å klage på urettmessige parkeringsgebyrer.
+            En enklere måte å klage på urettmessige parkeringsbøter og parkeringsgebyrer.
           </p>
         </div>
         <div>

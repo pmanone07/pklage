@@ -39,8 +39,9 @@ function Hero() {
               </span>
             </h1>
             <p className="mt-6 text-lg text-[color:var(--color-ink-soft)] leading-relaxed">
-              Svar på 5 spørsmål. Last opp bilde av gebyret og skiltet.
-              Vi skriver en juridisk korrekt klage — klar til å sende.
+              Fikk du en parkeringsbot du mener er feil? Svar på 5 spørsmål, last opp
+              bilde av boten og skiltet. Vi skriver en juridisk korrekt klage på
+              parkeringsboten — klar til å sende.
               <strong className="font-medium text-[color:var(--color-ink)]">
                 {" "}Du betaler kun hvis du faktisk sender den.
               </strong>
@@ -150,7 +151,7 @@ function SocialProof() {
   return (
     <section className="border-y border-[color:var(--color-line)] bg-[color:var(--color-bg-elev)]">
       <div className="container-wide py-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-        <Stat n="500 000+" label="Gebyrer ilagt i Norge / år" />
+        <Stat n="500 000+" label="Parkeringsbøter ilagt i Norge / år" />
         <Stat n="38 %" label="Av klager vinner frem" accent />
         <Stat n="60 sek" label="Fra start til ferdig klage" />
         <Stat n="149 kr" label="Pris — kun hvis du sender" />
@@ -264,9 +265,9 @@ function Grounds() {
             38 % av klager vinner frem.
           </h2>
           <p className="mt-4 text-[color:var(--color-ink-soft)] leading-relaxed">
-            Parkeringsselskaper håper du ikke gidder. Men hvis grunnlaget er
-            tynt, gir de seg ofte etter første formelle klage. Disse er de
-            sterkeste grunnlagene:
+            Parkeringsselskaper håper du ikke gidder å klage på parkeringsboten.
+            Men hvis grunnlaget er tynt, gir de seg ofte etter første formelle
+            klage. Disse er de sterkeste grunnlagene:
           </p>
         </div>
         <div className="grid sm:grid-cols-2 gap-3">
@@ -386,7 +387,7 @@ function Pricing() {
 function FAQ() {
   const items = [
     {
-      q: "Hva hvis klagen min ikke vinner frem?",
+      q: "Hva hvis klagen på parkeringsboten min ikke vinner frem?",
       a: "Da har du tapt 149 kr, men forsøkt å spare flere hundre. Klagen din skal være formelt korrekt; hvis det er en åpenbar feil fra oss refunderer vi.",
     },
     {
@@ -394,7 +395,7 @@ function FAQ() {
       a: "Nei. Vi lager en formell klage basert på opplysningene du gir oss. Det erstatter ikke individuell juridisk vurdering ved kompliserte saker.",
     },
     {
-      q: "Hvorfor er det gratis å lage klagen?",
+      q: "Hvorfor er det gratis å lage klagen på parkeringsboten?",
       a: "Vi tror på det vi leverer. Du leser hele klagen først — vi tjener bare hvis du faktisk sender den.",
     },
     {
@@ -448,7 +449,7 @@ function FinalCta() {
         <div aria-hidden className="absolute inset-0 grain opacity-50" />
         <div className="relative">
           <h2 className="text-3xl sm:text-5xl tracking-tight max-w-2xl mx-auto">
-            Du har 14 dager på å klage. Bruk 60 sekunder.
+            Du har 14 dager på å klage på parkeringsboten. Bruk 60 sekunder.
           </h2>
           <Link
             href="/klage"
